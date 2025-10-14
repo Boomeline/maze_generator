@@ -53,6 +53,7 @@ class MazeGen():
   
 
     def gen(self, neigbors:list , maze, stack):
+        dirs = [(0, -2), (0, 2), (-2, 0), (2, 0)]
         while not neigbors:
             stacked = stack.pop()
             self.current = stacked
@@ -65,6 +66,20 @@ class MazeGen():
             next.visited = True
             next.parent = self.current
             self.current.children.append(next)
+            for dx, dy in dirs:
+                if self.current.x + dx == next.x and self.current.y + dy == next.y:
+                    if dx == 2:   # right
+                        self.current.walls["r"] = False
+                        next.walls["l"] = False
+                    elif dx == -2:  # left
+                        self.current.walls["l"] = False
+                        next.walls["r"] = False
+                    elif dy == 2:   # down
+                        self.current.walls["b"] = False
+                        next.walls["t"] = False
+                    elif dy == -2:  # up
+                        self.current.walls["t"] = False
+                        next.walls["b"] = False
             self.current = next
             stack.append(next)
             print(stack)
@@ -91,10 +106,17 @@ class MazeGen():
 
     def draw(self, window, neigbors):
         color = 250, 250, 250
+        dirs = [(0, -2), (0, 2), (-2, 0), (2, 0)]
         for row in range(len(self.cells)):
             for cell in range(len(self.cells[row])):
-                for neig in neigbors:
-                    if not neig in self.cells[row][cell].children:
-                        color = 0, 0, 0
                 rect = pg.Rect(cell*20 ,row*20  , 20, 20)
                 pg.draw.rect(window , color , rect)
+                for dx, dy in dirs:
+                    if self.cells[cell][row].walls["t"] and dy == -2:  # top
+                        pg.draw.line(window, (0, 0, 0), (cell*20, row*20), (cell*20 + 20, row*20), 2)
+                    if self.cells[cell][row].walls["b"] and dy == 2:   # bottom
+                        pg.draw.line(window, (0, 0, 0), (cell*20, row*20 + 20), (cell*20 + 20, row*20 + 20), 2)
+                    if self.cells[cell][row].walls["l"] and dx == -2:  # left
+                        pg.draw.line(window, (0, 0, 0), (cell*20, row*20), (cell*20, row*20 + 20), 2)
+                    if self.cells[cell][row].walls["r"] and dx == 2:   # right
+                        pg.draw.line(window, (0, 0, 0), (cell*20 + 20, row*20), (cell*20 + 20, row*20 + 20), 2)

@@ -7,5 +7,11 @@ class Cell():
         self.children = []
         self.visited = False
         self.done = False
+        self.walls = {
+            "t" : True,
+            "b" : True,
+            "l" : True,
+            "r" : True}
+        
 
  
