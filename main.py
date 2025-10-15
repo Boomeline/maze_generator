@@ -35,6 +35,18 @@ while run:
         try:
             maze.gen(n, maze , stack)
         except IndexError:
+            # generation finished (stack emptied) — print debug info
+            # show sample walls and a total count of wall sides still True
+            total_true = 0
+            for x in range(20):
+                for y in range(20):
+                    total_true += sum(1 for v in maze.cells[x][y].walls.values() if v)
+
+            print("Total wall sides still True:", total_true)
+            print("Sample (0,0).walls:", maze.cells[0][0].walls)
+            print("Sample (0,1).walls:", maze.cells[0][1].walls)
+            print("Sample (1,0).walls:", maze.cells[1][0].walls)
+
             maze.draw(window , n)
             pg.display.flip()
             draw = False
