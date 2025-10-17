@@ -4,28 +4,23 @@ import pygame as pg
 
 class MazeGen():
 
-    def __init__(self, stack: list):
-        self.cells = [[None for y in range(20)] for x in range(20)]
-        for x in range(20):
+    def __init__(self, stack: list, scale: int, window ):
+        self.window = window
+        self.scale = scale
+        self.stack = stack
+        self.cells = [[None for y in range(scale)] for x in range(scale)]
+        for x in range(scale):
             for y in range(20):
                 self.cells[x][y] = Cell(None, x, y)
         self.current = self.cells[0][0]
         stack.append(self.current)
         self.current.visited = True
         self.coordinates = []
+        self.validNeighbors = []
         # print(self.cells)
  
-    
-    def drawGrid(self,  height = 400, scale = 20, width = 400):
-        # drawGrid previously created new Cell instances which caused the
-        # algorithm to modify objects that weren't the same as the grid used
-        # for rendering. Cells are created in __init__ now, so this is a no-op
-        # placeholder kept for compatibility with the rest of the code.
-        return
-
 
     def neighbors(self):
-        validNeighbors = []
 
         # for x in range(20):
         #     for y in range(20):
@@ -46,26 +41,24 @@ class MazeGen():
                 neighbor = self.cells[nx][ny]
 
                 if not neighbor.visited:
-                    validNeighbors.append(neighbor)
+                    self.validNeighbors.append(neighbor)
                     self.coordinates.append((nx, ny))
-        
-        return validNeighbors
   
 
-    def gen(self, neigbors:list , maze, stack):
+    def gen(self, maze):
         # neighbors() returns immediate neighbors at offsets of 1 cell
         # so wall-removal should use offsets of 1, not 2
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
-        while not neigbors:
-            stacked = stack.pop()
+        while not self.validNeighbors:
+            stacked = self.stack.pop()
             self.current = stacked
-            neigbors = maze.neighbors()
-            print("pop")
+            self.validNeihgbors = maze.neighbors()
+            # print("pop")
         
         else:
-            side = randint(0, len(neigbors) - 1)   
-            next = neigbors[side]
-            print(f"Gen: current=({self.current.x},{self.current.y}) next=({next.x},{next.y})")
+            side = randint(0, len(self.validNeighbors) - 1)   
+            next = self.validNeighbors[side]
+            # print(f"Gen: current=({self.current.x},{self.current.y}) next=({next.x},{next.y})")
             next.visited = True
             next.parent = self.current
             self.current.children.append(next)
@@ -73,24 +66,24 @@ class MazeGen():
                 if self.current.x + dx == next.x and self.current.y + dy == next.y:
                     # Determine which walls to remove based on dx/dy
                     if dx == 1:   # right
-                        print(' removing right wall of current and left of next')
+                        # print(' removing right wall of current and left of next')
                         self.current.walls["r"] = False
                         next.walls["l"] = False
                     elif dx == -1:  # left
-                        print(' removing left wall of current and right of next')
+                        # print(' removing left wall of current and right of next')
                         self.current.walls["l"] = False
                         next.walls["r"] = False
                     elif dy == 1:   # down
-                        print(' removing bottom wall of current and top of next')
+                        # print(' removing bottom wall of current and top of next')
                         self.current.walls["b"] = False
                         next.walls["t"] = False
                     elif dy == -1:  # up
-                        print(' removing top wall of current and bottom of next')
+                        # print(' removing top wall of current and bottom of next')
                         self.current.walls["t"] = False
                         next.walls["b"] = False
             self.current = next
-            stack.append(next)
-            print(stack)
+            self.stack.append(next)
+
 
 
 
@@ -112,23 +105,23 @@ class MazeGen():
     #         if stack:
     #             self.current = stack[-1]
 
-    def draw(self, window, neigbors):
+    def draw(self):
         color = 250, 250, 250
         # iterate using x (column) and y (row) so indexing matches how
         # self.cells is populated (self.cells[x][y])
         for x in range(len(self.cells)):
             for y in range(len(self.cells[x])):
                 rect = pg.Rect(x*20, y*20, 20, 20)
-                pg.draw.rect(window, color, rect)
+                pg.draw.rect(self.window, color, rect)
 
                 cell_obj = self.cells[x][y]
 
                 # draw walls only when the corresponding flag is True
                 if cell_obj.walls["t"]:  # top
-                    pg.draw.line(window, (0, 0, 0), (x*20, y*20), (x*20 + 20, y*20), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x*20, y*20), (x*20 + 20, y*20), 2)
                 if cell_obj.walls["b"]:  # bottom
-                    pg.draw.line(window, (0, 0, 0), (x*20, y*20 + 20), (x*20 + 20, y*20 + 20), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x*20, y*20 + 20), (x*20 + 20, y*20 + 20), 2)
                 if cell_obj.walls["l"]:  # left
-                    pg.draw.line(window, (0, 0, 0), (x*20, y*20), (x*20, y*20 + 20), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x*20, y*20), (x*20, y*20 + 20), 2)
                 if cell_obj.walls["r"]:  # right
-                    pg.draw.line(window, (0, 0, 0), (x*20 + 20, y*20), (x*20 + 20, y*20 + 20), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x*20 + 20, y*20), (x*20 + 20, y*20 + 20), 2)

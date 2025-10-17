@@ -6,8 +6,8 @@ from time import sleep
 
 pg.init()
 
-width = 400
-height = 400
+width = 402
+height = 402
 scale = 20
 window = pg.display.set_mode((width, height))
 grid = []
@@ -16,8 +16,7 @@ stack = []
 
 run = True
 draw = True
-maze = MazeGen(stack)
-maze.drawGrid()
+maze = MazeGen(stack, scale , window)
 # pg.display.flip()
 
 while run:
@@ -30,24 +29,11 @@ while run:
                 run = False
 
     while draw:
-        n = maze.neighbors()
-        print(stack)
+        maze.neighbors()
         try:
-            maze.gen(n, maze , stack)
+            maze.gen(maze)
         except IndexError:
-            # generation finished (stack emptied) — print debug info
-            # show sample walls and a total count of wall sides still True
-            total_true = 0
-            for x in range(20):
-                for y in range(20):
-                    total_true += sum(1 for v in maze.cells[x][y].walls.values() if v)
-
-            print("Total wall sides still True:", total_true)
-            print("Sample (0,0).walls:", maze.cells[0][0].walls)
-            print("Sample (0,1).walls:", maze.cells[0][1].walls)
-            print("Sample (1,0).walls:", maze.cells[1][0].walls)
-
-            maze.draw(window , n)
+            maze.draw()
             pg.display.flip()
             draw = False
 pg.quit()
