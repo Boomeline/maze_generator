@@ -31,7 +31,7 @@ while run:
     while draw:
         maze.neighbors()
         try:
-            maze.gen(maze)
+            maze.gen()
         except IndexError:
             maze.draw()
             pg.display.flip()
