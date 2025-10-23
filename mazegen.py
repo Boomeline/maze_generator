@@ -4,13 +4,14 @@ import pygame as pg
 
 class MazeGen():
 
-    def __init__(self, stack: list, scale: int, window ):
+    def __init__(self, stack: list, grid_size: int, cell_size: int, window ):
         self.window = window
-        self.scale = scale
+        self.grid_size = grid_size
+        self.cell_size = cell_size
         self.stack = stack
-        self.cells = [[None for y in range(scale)] for x in range(scale)]
-        for x in range(scale):
-            for y in range(scale):
+        self.cells = [[None for y in range(grid_size)] for x in range(grid_size)]
+        for x in range(grid_size):
+            for y in range(grid_size):
                 self.cells[x][y] = Cell(None, x, y)
         self.current = self.cells[0][0]
         stack.append(self.current)
@@ -22,7 +23,7 @@ class MazeGen():
 
     def neighbors(self):
 
-        # for x in range(20):
+        # for x in range():
         #     for y in range(20):
         #         if (self.cells[x][y].x == self.current.x -1) or (self.cells[x][y].x == self.current.x +1):
         #             if (self.cells[x][y].y == self.current.y-1) or (self.cells[x][y].y == self.current.y +1):
@@ -41,7 +42,7 @@ class MazeGen():
         for dx, dy in directions:
             nx, ny = cx + dx, cy + dy
 
-            if 0 <= nx < self.scale and 0 <= ny < self.scale:
+            if 0 <= nx < self.grid_size and 0 <= ny < self.grid_size:
                 neighbor = self.cells[nx][ny]
 
                 if not neighbor.visited:
@@ -110,21 +111,23 @@ class MazeGen():
 
     def draw(self):
         color = 250, 250, 250
+        if randint(0, 300) ==1:
+            color = (200, 100, 100)
         # iterate using x (column) and y (row) so indexing matches how
         # self.cells is populated (self.cells[x][y])
         for x in range(len(self.cells)):
             for y in range(len(self.cells[x])):
-                rect = pg.Rect(x * self.scale, y * self.scale, self.scale, self.scale)
+                rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
                 pg.draw.rect(self.window, color, rect)
 
                 cell_obj = self.cells[x][y]
 
                 # draw walls only when the corresponding flag is True
                 if cell_obj.walls["t"]:  # top
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.scale, y * self.scale), (x * self.scale + self.scale, y * self.scale), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
                 if cell_obj.walls["b"]:  # bottom
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.scale, y * self.scale + self.scale), (x * self.scale + self.scale, y * self.scale + self.scale), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
                 if cell_obj.walls["l"]:  # left
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.scale, y * self.scale), (x * self.scale, y * self.scale + self.scale), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
                 if cell_obj.walls["r"]:  # right
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.scale + self.scale, y * self.scale), (x * self.scale + self.scale, y * self.scale + self.scale), 2)
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)

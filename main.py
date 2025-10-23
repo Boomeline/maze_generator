@@ -6,9 +6,11 @@ from time import sleep
 
 pg.init()
 
-width = 402
-height = 402
-scale = 20
+# grid_size = number of cells per side; cell_size = pixels per cell
+grid_size = 40
+cell_size = 15
+width = grid_size * cell_size + 2  # small padding for border lines
+height = grid_size * cell_size + 2
 window = pg.display.set_mode((width, height))
 grid = []
 stack = [] 
@@ -16,7 +18,7 @@ stack = []
 
 run = True
 draw = True
-maze = MazeGen(stack, scale , window)
+maze = MazeGen(stack, grid_size, cell_size, window)
 # pg.display.flip()
 
 while run:
