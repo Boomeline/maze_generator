@@ -3,6 +3,7 @@ import random as rand
 from cell import Cell 
 from mazegen import MazeGen
 from time import sleep
+from player import Player
 
 pg.init()
 

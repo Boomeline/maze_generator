@@ -111,12 +111,14 @@ class MazeGen():
 
     def draw(self):
         color = 250, 250, 250
-        if randint(0, 300) ==1:
-            color = (200, 100, 100)
         # iterate using x (column) and y (row) so indexing matches how
         # self.cells is populated (self.cells[x][y])
         for x in range(len(self.cells)):
             for y in range(len(self.cells[x])):
+                if randint(0, 800) == 1:
+                    color = (100, 250, 100)
+                else:
+                    color = (250, 250, 250)
                 rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
                 pg.draw.rect(self.window, color, rect)
 
