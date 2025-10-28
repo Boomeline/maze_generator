@@ -22,10 +22,12 @@ class Player ():
 
     def check_walls(self, neighbors):
         for neighbor in neighbors:
-            for walls in neighbor.walls:
-                check = walls
-                if not check:
-                    #block move
+            for wall_n in neighbor.walls:
+                wall = neighbors.walls[wall_n]
+                if not wall:
+                    
+                    
+                    
                     pass
 
     def check_green(self):
