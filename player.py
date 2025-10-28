@@ -5,6 +5,9 @@ class Player ():
         self.x, self.y = 0, 0
         self.cellSize = cellSize
 
+    def drawPlayer():
+        pass
+
     def move(self):
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
@@ -17,8 +20,13 @@ class Player ():
                 if event.key == pg.K_RIGHT:
                     self.X += self.cellsize  
 
-    def check_walls(self):
-        pass
+    def check_walls(self, neighbors):
+        for neighbor in neighbors:
+            for walls in neighbor.walls:
+                check = walls
+                if not check:
+                    #block move
+                    pass
 
     def check_green(self):
         pass
