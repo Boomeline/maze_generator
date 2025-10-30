@@ -15,7 +15,7 @@ height = grid_size * cell_size + 2
 window = pg.display.set_mode((width, height))
 grid = []
 stack = [] 
-
+player = Player(cell_size)
 
 run = True
 draw = True

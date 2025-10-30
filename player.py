@@ -26,8 +26,6 @@ class Player ():
                 wall = neighbors.walls[wall_n]
                 if not wall:
                     
-                    
-                    
                     pass
 
     def check_green(self):
