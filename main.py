@@ -22,6 +22,10 @@ draw = True
 maze = MazeGen(stack, grid_size, cell_size, window)
 # pg.display.flip()
 
+maze.neighbors()
+maze.gen()
+fst = True
+
 while run:
 
     for event in pg.event.get():
@@ -31,14 +35,18 @@ while run:
             if event.key == pg.K_ESCAPE:
                 run = False
 
-    while draw:
-        maze.neighbors()
-        try:
-            maze.gen()
-        except IndexError:
-            maze.draw()
-            pg.display.flip()
-            draw = False
+    # player.move()
+    # player.draw()
+    try: 
+        if fst:
+            x, y = maze.draw()
+            fst = False
+        else:
+            x, y = maze.draw(x, y)
+    except IndexError:
+        pg.display.update()
+
+
 pg.quit()
 
  

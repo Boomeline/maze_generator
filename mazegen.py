@@ -109,27 +109,30 @@ class MazeGen():
     #         if stack:
     #             self.current = stack[-1]
 
-    def draw(self):
+    def draw(self, x = 0 , y = 0):
         color = 250, 250, 250
-        # iterate using x (column) and y (row) so indexing matches how
-        # self.cells is populated (self.cells[x][y])
-        for x in range(len(self.cells)):
-            for y in range(len(self.cells[x])):
-                if randint(0, 800) == 1:
-                    color = (100, 250, 100)
-                else:
-                    color = (250, 250, 250)
-                rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
-                pg.draw.rect(self.window, color, rect)
 
-                cell_obj = self.cells[x][y]
+        if randint(0, 800) == 1:
+            color = (100, 250, 100)
+        else:
+            color = (250, 250, 250)
+        rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
+        pg.draw.rect(self.window, color, rect)
 
-                # draw walls only when the corresponding flag is True
-                if cell_obj.walls["t"]:  # top
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
-                if cell_obj.walls["b"]:  # bottom
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
-                if cell_obj.walls["l"]:  # left
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
-                if cell_obj.walls["r"]:  # right
-                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+        cell_obj = self.cells[x][y]
+
+        # draw walls only when the corresponding flag is True
+        if cell_obj.walls["t"]:  # top
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
+        if cell_obj.walls["b"]:  # bottom
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+        if cell_obj.walls["l"]:  # left
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
+        if cell_obj.walls["r"]:  # right
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+        if y == self.grid_size  - 1:
+            x += 1
+            y = 0
+        else: 
+            y += 1
+        return x, y

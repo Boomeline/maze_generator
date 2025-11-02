@@ -6,6 +6,7 @@ class Player ():
         self.cellSize = cellSize
 
     def drawPlayer():
+        
         pass
 
     def move(self):
@@ -25,7 +26,7 @@ class Player ():
             for wall_n in neighbor.walls:
                 wall = neighbors.walls[wall_n]
                 if not wall:
-                    
+
                     pass
 
     def check_green(self):
