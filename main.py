@@ -21,10 +21,16 @@ run = True
 draw = True
 maze = MazeGen(stack, grid_size, cell_size, window)
 # pg.display.flip()
+gen = True 
+while gen:
+    try: 
+        maze.neighbors()
+        maze.gen()
+    except IndexError:
+        gen = False 
 
-maze.neighbors()
-maze.gen()
 fst = True
+draw =True
 
 while run:
 
@@ -37,15 +43,17 @@ while run:
 
     # player.move()
     # player.draw()
-    try: 
-        if fst:
-            x, y = maze.draw()
-            fst = False
-        else:
-            x, y = maze.draw(x, y)
-    except IndexError:
-        pg.display.update()
 
+        try: 
+            if fst:
+                x, y = maze.draw()
+                fst = False
+            else:
+                x, y = maze.draw(x, y)
+                pg.display.update()
+        except IndexError:
+            draw = False
+        
 
 pg.quit()
 

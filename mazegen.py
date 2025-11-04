@@ -1,5 +1,5 @@
 from cell import Cell
-from random import choice,randint
+from random import randint
 import pygame as pg 
 
 class MazeGen():
@@ -55,16 +55,14 @@ class MazeGen():
         # so wall-removal should use offsets of 1, not 2
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
-        # If there are no valid neighbors, pop/backtrack until we find one
+        # debug: show entry into gen
+        print(f"gen() entry: current=({self.current.x},{self.current.y}) validNeighbors={len(self.validNeighbors)} stack={len(self.stack)}")
+
         while not self.validNeighbors:
             stacked = self.stack.pop()
             self.current = stacked
-            # repopulate valid neighbors for the new current
             self.neighbors()
-            # if stack becomes empty, stack.pop() will raise IndexError and the caller
-            # (main.py) handles it to finish generation.
 
-        # choose a random neighbor and carve a path
         side = randint(0, len(self.validNeighbors) - 1)
         next = self.validNeighbors[side]
         next.visited = True
@@ -72,7 +70,9 @@ class MazeGen():
         self.current.children.append(next)
         for dx, dy in dirs:
             if self.current.x + dx == next.x and self.current.y + dy == next.y:
-                # Determine which walls to remove based on dx/dy
+                # debug: which direction and cells are being carved
+                print(f"carve: dir=({dx},{dy}) from=({self.current.x},{self.current.y}) to=({next.x},{next.y})")
+
                 if dx == 1:   # right
                     self.current.walls["r"] = False
                     next.walls["l"] = False
@@ -120,6 +120,8 @@ class MazeGen():
         pg.draw.rect(self.window, color, rect)
 
         cell_obj = self.cells[x][y]
+
+        
 
         # draw walls only when the corresponding flag is True
         if cell_obj.walls["t"]:  # top
