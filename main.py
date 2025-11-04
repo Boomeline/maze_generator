@@ -43,7 +43,7 @@ while run:
 
     # player.move()
     # player.draw()
-
+    if draw:
         try: 
             if fst:
                 x, y = maze.draw()
@@ -52,6 +52,7 @@ while run:
                 x, y = maze.draw(x, y)
                 pg.display.update()
         except IndexError:
+            print("error")
             draw = False
         
 

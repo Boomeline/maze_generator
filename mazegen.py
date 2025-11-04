@@ -110,6 +110,7 @@ class MazeGen():
     #             self.current = stack[-1]
 
     def draw(self, x = 0 , y = 0):
+        print(x , y)
         color = 250, 250, 250
 
         if randint(0, 800) == 1:
@@ -121,7 +122,7 @@ class MazeGen():
 
         cell_obj = self.cells[x][y]
 
-        
+
 
         # draw walls only when the corresponding flag is True
         if cell_obj.walls["t"]:  # top
@@ -137,4 +138,5 @@ class MazeGen():
             y = 0
         else: 
             y += 1
+        print("end")
         return x, y

@@ -1,7 +1,7 @@
 import pygame as pg
 
 class Player ():
-    def __init__(self, cellSize : int):
+    def __init__(self, cellSize : int, ):
         self.x, self.y = 0, 0
         self.cellSize = cellSize
 
