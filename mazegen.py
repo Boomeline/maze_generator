@@ -19,18 +19,12 @@ class MazeGen():
         self.coordinates = []
         self.validNeighbors = []
         # print(self.cells)
+
+    def get(self):
+        return self.cells
  
 
     def neighbors(self):
-
-        # for x in range():
-        #     for y in range(20):
-        #         if (self.cells[x][y].x == self.current.x -1) or (self.cells[x][y].x == self.current.x +1):
-        #             if (self.cells[x][y].y == self.current.y-1) or (self.cells[x][y].y == self.current.y +1):
-        #                 validNeighbors.append(self.cells[x][y])
-        #                 coordinates.append(x)
-        #                 coordinates.append(y)
-        # return validNeighbors
 
         # reset the neighbor lists each time so we don't accumulate stale entries
         self.validNeighbors = []
@@ -88,33 +82,13 @@ class MazeGen():
         self.current = next
         self.stack.append(next)
 
-
-
-
-    # def gen(self):
-    # stack = [self.current]   # start from current
-    # while stack:
-    #     current = stack[-1]
-    #     self.current = current
-    #     neis = self.neighbors()   # should return list of unvisited neighbors
-
-    #     if neis:                  # if there are unvisited neighbors
-    #         nxt = choice(neis)    # pick one at random
-    #         nxt.visited = True
-    #         nxt.parent = current
-    #         current.children.append(nxt)
-    #         stack.append(nxt)     # move into the neighbor
-    #     else:
-    #         stack.pop()           # backtrack
-    #         if stack:
-    #             self.current = stack[-1]
-
     def draw(self, x = 0 , y = 0):
         print(x , y)
         color = 250, 250, 250
 
         if randint(0, 800) == 1:
             color = (100, 250, 100)
+            self.cells[x][y].green = True
         else:
             color = (250, 250, 250)
         rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)

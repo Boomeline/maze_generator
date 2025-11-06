@@ -8,31 +8,33 @@ from player import Player
 pg.init()
 
 # grid_size = number of cells per side; cell_size = pixels per cell
-grid_size = 40
-cell_size = 15
+grid_size = 20
+cell_size = 30
 width = grid_size * cell_size + 2  # small padding for border lines
 height = grid_size * cell_size + 2
 window = pg.display.set_mode((width, height))
-grid = []
 stack = [] 
-player = Player(cell_size)
+player = Player(cell_size, grid_size)
 
 run = True
 draw = True
 maze = MazeGen(stack, grid_size, cell_size, window)
-# pg.display.flip()
 gen = True 
+clock = pg.time.Clock()
+
 while gen:
     try: 
         maze.neighbors()
         maze.gen()
     except IndexError:
         gen = False 
-
+cells = maze.get()
 fst = True
 draw =True
 
 while run:
+
+    # clock.tick(60)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -41,8 +43,20 @@ while run:
             if event.key == pg.K_ESCAPE:
                 run = False
 
-    # player.move()
-    # player.draw()
+    player.move()
+    player.drawPlayer(window)
+
+    if player.checkGreen(cells):
+        sleep(1)
+        draw = True 
+        fst = False
+        try: 
+            maze.neighbors()
+            maze.gen()
+        except IndexError:
+            gen = False 
+        cells = maze.get()
+
     if draw:
         try: 
             if fst:
@@ -54,6 +68,7 @@ while run:
         except IndexError:
             print("error")
             draw = False
+             
         
 
 pg.quit()

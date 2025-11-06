@@ -7,6 +7,7 @@ class Cell():
         self.children = []
         self.visited = False
         self.done = False
+        self.green = False 
         self.walls = {
             "t" : True,
             "b" : True,

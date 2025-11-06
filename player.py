@@ -1,25 +1,27 @@
 import pygame as pg
 
 class Player ():
-    def __init__(self, cellSize : int, ):
-        self.x, self.y = 0, 0
+    def __init__(self, cellSize : int, grid_size ):
+        self.x, self.y = 0, 30
         self.cellSize = cellSize
+        self.gridSize = grid_size 
 
-    def drawPlayer():
-        
+    def drawPlayer(self, screen):
+        pg.draw.rect(screen, (255, 0, 0), (self.x, self.y, 15, 15)) 
         pass
 
     def move(self):
+        print(self.x , self.y)
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_UP:
-                    self.y -= self.cellsize
+                    self.y -= self.cellSize
                 if event.key == pg.K_DOWN:
-                    self.y += self.cellsize
+                    self.y += self.cellSize
                 if event.key == pg.K_LEFT:
-                    self.X -= self.cellsize
+                    self.x -= self.cellSize
                 if event.key == pg.K_RIGHT:
-                    self.X += self.cellsize  
+                    self.x += self.cellSize  
 
     def check_walls(self, neighbors):
         for neighbor in neighbors:
@@ -29,5 +31,9 @@ class Player ():
 
                     pass
 
-    def check_green(self):
-        pass
+    def checkGreen(self, cells: list):
+        indexX = self.x/self.gridSize
+        indexY = self.y/self.gridSize
+        if cells[int(indexX)][int(indexY)].green:
+            return True
+        
