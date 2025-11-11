@@ -11,7 +11,6 @@ class Player ():
         pass
 
     def move(self):
-        print(self.x , self.y)
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_UP:

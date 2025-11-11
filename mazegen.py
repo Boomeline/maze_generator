@@ -50,7 +50,7 @@ class MazeGen():
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
         # debug: show entry into gen
-        print(f"gen() entry: current=({self.current.x},{self.current.y}) validNeighbors={len(self.validNeighbors)} stack={len(self.stack)}")
+        # print(f"gen() entry: current=({self.current.x},{self.current.y}) validNeighbors={len(self.validNeighbors)} stack={len(self.stack)}")
 
         while not self.validNeighbors:
             stacked = self.stack.pop()
@@ -65,7 +65,7 @@ class MazeGen():
         for dx, dy in dirs:
             if self.current.x + dx == next.x and self.current.y + dy == next.y:
                 # debug: which direction and cells are being carved
-                print(f"carve: dir=({dx},{dy}) from=({self.current.x},{self.current.y}) to=({next.x},{next.y})")
+                # print(f"carve: dir=({dx},{dy}) from=({self.current.x},{self.current.y}) to=({next.x},{next.y})")
 
                 if dx == 1:   # right
                     self.current.walls["r"] = False
@@ -82,8 +82,25 @@ class MazeGen():
         self.current = next
         self.stack.append(next)
 
-    def draw(self, x = 0 , y = 0):
-        print(x , y)
+    def draw(self):
+        color = 250, 250, 250
+        pg.Surface.fill(self.window, (color))
+
+        for y in self.cells:
+            for x in self.cells[x]:
+                cell_obj = self.cells[x][y]
+
+                if cell_obj.walls["t"]:  # top
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
+                if cell_obj.walls["b"]:  # bottom
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+                if cell_obj.walls["l"]:  # left
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
+                if cell_obj.walls["r"]:  # right
+                    pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+
+
+    def animate(self, x = 0 , y = 0):
         color = 250, 250, 250
 
         if randint(0, 800) == 1:
@@ -96,9 +113,6 @@ class MazeGen():
 
         cell_obj = self.cells[x][y]
 
-
-
-        # draw walls only when the corresponding flag is True
         if cell_obj.walls["t"]:  # top
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
         if cell_obj.walls["b"]:  # bottom
@@ -112,5 +126,4 @@ class MazeGen():
             y = 0
         else: 
             y += 1
-        print("end")
         return x, y

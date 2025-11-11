@@ -4,37 +4,22 @@ from cell import Cell
 from mazegen import MazeGen
 from time import sleep
 from player import Player
+from loop import Loop
+
+grid_size = 20
+cell_size = 30
 
 pg.init()
 
-# grid_size = number of cells per side; cell_size = pixels per cell
-grid_size = 20
-cell_size = 30
-width = grid_size * cell_size + 2  # small padding for border lines
-height = grid_size * cell_size + 2
-window = pg.display.set_mode((width, height))
-stack = [] 
-player = Player(cell_size, grid_size)
+player, window, maze = Loop()
 
-run = True
-draw = True
-maze = MazeGen(stack, grid_size, cell_size, window)
-gen = True 
 clock = pg.time.Clock()
 
-while gen:
-    try: 
-        maze.neighbors()
-        maze.gen()
-    except IndexError:
-        gen = False 
-cells = maze.get()
-fst = True
-draw =True
+run = True
 
 while run:
 
-    # clock.tick(60)
+    clock.tick(30)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -45,31 +30,9 @@ while run:
 
     player.move()
     player.drawPlayer(window)
-
-    if player.checkGreen(cells):
-        sleep(1)
-        draw = True 
-        fst = False
-        try: 
-            maze.neighbors()
-            maze.gen()
-        except IndexError:
-            gen = False 
-        cells = maze.get()
-
-    if draw:
-        try: 
-            if fst:
-                x, y = maze.draw()
-                fst = False
-            else:
-                x, y = maze.draw(x, y)
-                pg.display.update()
-        except IndexError:
-            print("error")
-            draw = False
-             
-        
+    
+    pg.display.flip()
+    pg.Surface.fill(window, (0,0,0))        
 
 pg.quit()
 
