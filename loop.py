@@ -13,31 +13,23 @@ class Loop():
         self.window = pg.display.set_mode((self.width, self.height))
         self.player = Player(cell_size, grid_size)
         self.maze = MazeGen(self.stack, grid_size, cell_size, self.window)
+        self.cells = self.maze.get()
+
+    def call(self):
         return self.player, self.window, self.maze
 
-
     def gen(self):
-        draw = True
-        gen = True
-        fst = True
-        while gen :
-            try: 
+        print("gen")
+        for _ in range(self.width, self.height): 
                 self.maze.neighbors()
                 self.maze.gen()
-            except IndexError:
-                gen = False 
 
-
-        if self.player.checkGreen(cells):
-            sleep(1)
-            draw = True 
-            fst = False
-            try: 
+        if self.player.checkGreen(self.cells):
+            sleep(1) 
+            for _ in range(self.width, self.height): 
                 self.maze.neighbors()
                 self.maze.gen()
-            except IndexError:
-                gen = False 
-            cells = self.maze.get()
+                self.cells = self.maze.get()
 
     def draw(self):
         pass

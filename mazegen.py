@@ -45,13 +45,7 @@ class MazeGen():
   
 
     def gen(self):
-        # neighbors() returns immediate neighbors at offsets of 1 cell
-        # so wall-removal should use offsets of 1, not 2
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
-
-        # debug: show entry into gen
-        # print(f"gen() entry: current=({self.current.x},{self.current.y}) validNeighbors={len(self.validNeighbors)} stack={len(self.stack)}")
-
         while not self.validNeighbors:
             stacked = self.stack.pop()
             self.current = stacked
@@ -60,13 +54,10 @@ class MazeGen():
         side = randint(0, len(self.validNeighbors) - 1)
         next = self.validNeighbors[side]
         next.visited = True
-        next.parent = self.current
-        self.current.children.append(next)
+        # next.parent = self.current
+        # self.current.children.append(next)
         for dx, dy in dirs:
             if self.current.x + dx == next.x and self.current.y + dy == next.y:
-                # debug: which direction and cells are being carved
-                # print(f"carve: dir=({dx},{dy}) from=({self.current.x},{self.current.y}) to=({next.x},{next.y})")
-
                 if dx == 1:   # right
                     self.current.walls["r"] = False
                     next.walls["l"] = False

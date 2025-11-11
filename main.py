@@ -11,10 +11,12 @@ cell_size = 30
 
 pg.init()
 
-player, window, maze = Loop()
+loop = Loop(grid_size, cell_size)
+player, window, maze = loop.call()
 
 clock = pg.time.Clock()
 
+loop.gen()
 run = True
 
 while run:
