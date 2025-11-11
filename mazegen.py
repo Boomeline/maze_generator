@@ -1,5 +1,5 @@
 from cell import Cell
-from random import choice,randint
+from random import randint
 import pygame as pg 
 
 class MazeGen():
@@ -19,18 +19,12 @@ class MazeGen():
         self.coordinates = []
         self.validNeighbors = []
         # print(self.cells)
+
+    def get(self):
+        return self.cells
  
 
     def neighbors(self):
-
-        # for x in range():
-        #     for y in range(20):
-        #         if (self.cells[x][y].x == self.current.x -1) or (self.cells[x][y].x == self.current.x +1):
-        #             if (self.cells[x][y].y == self.current.y-1) or (self.cells[x][y].y == self.current.y +1):
-        #                 validNeighbors.append(self.cells[x][y])
-        #                 coordinates.append(x)
-        #                 coordinates.append(y)
-        # return validNeighbors
 
         # reset the neighbor lists each time so we don't accumulate stale entries
         self.validNeighbors = []
@@ -55,16 +49,14 @@ class MazeGen():
         # so wall-removal should use offsets of 1, not 2
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
-        # If there are no valid neighbors, pop/backtrack until we find one
+        # debug: show entry into gen
+        # print(f"gen() entry: current=({self.current.x},{self.current.y}) validNeighbors={len(self.validNeighbors)} stack={len(self.stack)}")
+
         while not self.validNeighbors:
             stacked = self.stack.pop()
             self.current = stacked
-            # repopulate valid neighbors for the new current
             self.neighbors()
-            # if stack becomes empty, stack.pop() will raise IndexError and the caller
-            # (main.py) handles it to finish generation.
 
-        # choose a random neighbor and carve a path
         side = randint(0, len(self.validNeighbors) - 1)
         next = self.validNeighbors[side]
         next.visited = True
@@ -72,7 +64,9 @@ class MazeGen():
         self.current.children.append(next)
         for dx, dy in dirs:
             if self.current.x + dx == next.x and self.current.y + dy == next.y:
-                # Determine which walls to remove based on dx/dy
+                # debug: which direction and cells are being carved
+                # print(f"carve: dir=({dx},{dy}) from=({self.current.x},{self.current.y}) to=({next.x},{next.y})")
+
                 if dx == 1:   # right
                     self.current.walls["r"] = False
                     next.walls["l"] = False
@@ -88,43 +82,14 @@ class MazeGen():
         self.current = next
         self.stack.append(next)
 
-
-
-
-    # def gen(self):
-    # stack = [self.current]   # start from current
-    # while stack:
-    #     current = stack[-1]
-    #     self.current = current
-    #     neis = self.neighbors()   # should return list of unvisited neighbors
-
-    #     if neis:                  # if there are unvisited neighbors
-    #         nxt = choice(neis)    # pick one at random
-    #         nxt.visited = True
-    #         nxt.parent = current
-    #         current.children.append(nxt)
-    #         stack.append(nxt)     # move into the neighbor
-    #     else:
-    #         stack.pop()           # backtrack
-    #         if stack:
-    #             self.current = stack[-1]
-
     def draw(self):
         color = 250, 250, 250
-        # iterate using x (column) and y (row) so indexing matches how
-        # self.cells is populated (self.cells[x][y])
-        for x in range(len(self.cells)):
-            for y in range(len(self.cells[x])):
-                if randint(0, 800) == 1:
-                    color = (100, 250, 100)
-                else:
-                    color = (250, 250, 250)
-                rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
-                pg.draw.rect(self.window, color, rect)
+        pg.Surface.fill(self.window, (color))
 
+        for y in self.cells:
+            for x in self.cells[x]:
                 cell_obj = self.cells[x][y]
 
-                # draw walls only when the corresponding flag is True
                 if cell_obj.walls["t"]:  # top
                     pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
                 if cell_obj.walls["b"]:  # bottom
@@ -133,3 +98,32 @@ class MazeGen():
                     pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
                 if cell_obj.walls["r"]:  # right
                     pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+
+
+    def animate(self, x = 0 , y = 0):
+        color = 250, 250, 250
+
+        if randint(0, 800) == 1:
+            color = (100, 250, 100)
+            self.cells[x][y].green = True
+        else:
+            color = (250, 250, 250)
+        rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
+        pg.draw.rect(self.window, color, rect)
+
+        cell_obj = self.cells[x][y]
+
+        if cell_obj.walls["t"]:  # top
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
+        if cell_obj.walls["b"]:  # bottom
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+        if cell_obj.walls["l"]:  # left
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
+        if cell_obj.walls["r"]:  # right
+            pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+        if y == self.grid_size  - 1:
+            x += 1
+            y = 0
+        else: 
+            y += 1
+        return x, y

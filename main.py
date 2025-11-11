@@ -4,25 +4,22 @@ from cell import Cell
 from mazegen import MazeGen
 from time import sleep
 from player import Player
+from loop import Loop
+
+grid_size = 20
+cell_size = 30
 
 pg.init()
 
-# grid_size = number of cells per side; cell_size = pixels per cell
-grid_size = 40
-cell_size = 15
-width = grid_size * cell_size + 2  # small padding for border lines
-height = grid_size * cell_size + 2
-window = pg.display.set_mode((width, height))
-grid = []
-stack = [] 
+player, window, maze = Loop()
 
+clock = pg.time.Clock()
 
 run = True
-draw = True
-maze = MazeGen(stack, grid_size, cell_size, window)
-# pg.display.flip()
 
 while run:
+
+    clock.tick(30)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -31,14 +28,12 @@ while run:
             if event.key == pg.K_ESCAPE:
                 run = False
 
-    while draw:
-        maze.neighbors()
-        try:
-            maze.gen()
-        except IndexError:
-            maze.draw()
-            pg.display.flip()
-            draw = False
+    player.move()
+    player.drawPlayer(window)
+    
+    pg.display.flip()
+    pg.Surface.fill(window, (0,0,0))        
+
 pg.quit()
 
  
