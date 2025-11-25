@@ -46,16 +46,19 @@ class MazeGen():
 
     def gen(self):
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
-        while not self.validNeighbors:
-            stacked = self.stack.pop()
-            self.current = stacked
-            self.neighbors()
-
+        
+        # If no valid neighbors, backtrack
+        if not self.validNeighbors:
+            if self.stack:
+                self.stack.pop()
+            return
+        
+        # Pick random neighbor and carve passage
         side = randint(0, len(self.validNeighbors) - 1)
         next = self.validNeighbors[side]
         next.visited = True
-        # next.parent = self.current
-        # self.current.children.append(next)
+        
+        # Remove walls between current and next
         for dx, dy in dirs:
             if self.current.x + dx == next.x and self.current.y + dy == next.y:
                 if dx == 1:   # right
@@ -70,15 +73,13 @@ class MazeGen():
                 elif dy == -1:  # up
                     self.current.walls["t"] = False
                     next.walls["b"] = False
+        
         self.current = next
         self.stack.append(next)
 
     def draw(self):
-        color = 250, 250, 250
-        pg.Surface.fill(self.window, (color))
-
-        for y in self.cells:
-            for x in self.cells[x]:
+        for y in range(len(self.cells)):
+            for x in range(len(self.cells[y])):
                 cell_obj = self.cells[x][y]
 
                 if cell_obj.walls["t"]:  # top
@@ -97,8 +98,6 @@ class MazeGen():
         if randint(0, 800) == 1:
             color = (100, 250, 100)
             self.cells[x][y].green = True
-        else:
-            color = (250, 250, 250)
         rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
         pg.draw.rect(self.window, color, rect)
 

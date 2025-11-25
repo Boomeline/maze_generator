@@ -19,17 +19,19 @@ class Loop():
         return self.player, self.window, self.maze
 
     def gen(self):
-        print("gen")
-        for _ in range(self.width, self.height): 
-                self.maze.neighbors()
-                self.maze.gen()
+        self.player.move()
+        while self.maze.stack or not self.maze.current.visited:
+            self.maze.neighbors()
+            self.maze.gen()
 
+    
+    def draw(self):
+        self.maze.draw()
+        self.player.move()
+        self.player.drawPlayer(self.window)
         if self.player.checkGreen(self.cells):
             sleep(1) 
             for _ in range(self.width, self.height): 
                 self.maze.neighbors()
                 self.maze.gen()
                 self.cells = self.maze.get()
-
-    def draw(self):
-        pass

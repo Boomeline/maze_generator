@@ -6,8 +6,8 @@ from time import sleep
 from player import Player
 from loop import Loop
 
-grid_size = 20
-cell_size = 30
+grid_size = 40
+cell_size = 15
 
 pg.init()
 
@@ -18,10 +18,10 @@ clock = pg.time.Clock()
 
 loop.gen()
 run = True
-
+ 
 while run:
 
-    clock.tick(30)
+    #clock.tick(30)
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -29,12 +29,10 @@ while run:
         if event.type == pg.KEYDOWN:    
             if event.key == pg.K_ESCAPE:
                 run = False
-
-    player.move()
-    player.drawPlayer(window)
     
-    pg.display.flip()
-    pg.Surface.fill(window, (0,0,0))        
+    pg.Surface.fill(window, (0,0,0))
+    loop.draw()  
+    pg.display.flip()        
 
 pg.quit()
 

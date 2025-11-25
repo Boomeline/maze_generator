@@ -2,12 +2,12 @@ import pygame as pg
 
 class Player ():
     def __init__(self, cellSize : int, grid_size ):
-        self.x, self.y = 0, 30
+        self.x, self.y = 0, 0
         self.cellSize = cellSize
         self.gridSize = grid_size 
 
     def drawPlayer(self, screen):
-        pg.draw.rect(screen, (255, 0, 0), (self.x, self.y, 15, 15)) 
+        pg.draw.rect(screen, (255, 0, 0), (self.x + 3, self.y + 3, self.cellSize - 4, self.cellSize- 4 )) 
         pass
 
     def move(self):
