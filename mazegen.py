@@ -25,59 +25,56 @@ class MazeGen():
  
 
     def neighbors(self):
-
-        # reset the neighbor lists each time so we don't accumulate stale entries
+        dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
         self.validNeighbors = []
-        self.coordinates = []
-
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         cx, cy = self.current.x, self.current.y
-
-        for dx, dy in directions:
+        for dx, dy in dirs:
             nx, ny = cx + dx, cy + dy
-
             if 0 <= nx < self.grid_size and 0 <= ny < self.grid_size:
-                neighbor = self.cells[nx][ny]
-
-                if not neighbor.visited:
-                    self.validNeighbors.append(neighbor)
-                    self.coordinates.append((nx, ny))
+                neighbour = self.cells[nx][ny]
+                if not neighbour.visited:
+                    self.validNeighbors.append(neighbour)
+        return self.validNeighbors
   
 
     def gen(self):
+        # Perform a single DFS step: carve to a random unvisited neighbor
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
-        
-        # If no valid neighbors, backtrack
-        if not self.validNeighbors:
-            if self.stack:
-                self.stack.pop()
-            return
-        
-        # Pick random neighbor and carve passage
-        side = randint(0, len(self.validNeighbors) - 1)
-        next = self.validNeighbors[side]
-        next.visited = True
-        
-        # Remove walls between current and next
-        for dx, dy in dirs:
-            if self.current.x + dx == next.x and self.current.y + dy == next.y:
-                if dx == 1:   # right
-                    self.current.walls["r"] = False
-                    next.walls["l"] = False
-                elif dx == -1:  # left
-                    self.current.walls["l"] = False
-                    next.walls["r"] = False
-                elif dy == 1:   # down
-                    self.current.walls["b"] = False
-                    next.walls["t"] = False
-                elif dy == -1:  # up
-                    self.current.walls["t"] = False
-                    next.walls["b"] = False
-        
-        self.current = next
-        self.stack.append(next)
+        self.neighbors()
+        if self.validNeighbors:
+            side = randint(0, len(self.validNeighbors) - 1)
+            nxt = self.validNeighbors[side]
+            # push current to stack (path)
+            self.stack.append(self.current)
+            # remove walls between current and nxt
+            if self.current.x + 1 == nxt.x and self.current.y == nxt.y:  # right
+                self.current.walls["r"] = False
+                nxt.walls["l"] = False
+            elif self.current.x - 1 == nxt.x and self.current.y == nxt.y:  # left
+                self.current.walls["l"] = False
+                nxt.walls["r"] = False
+            elif self.current.y + 1 == nxt.y and self.current.x == nxt.x:  # down
+                self.current.walls["b"] = False
+                nxt.walls["t"] = False
+            elif self.current.y - 1 == nxt.y and self.current.x == nxt.x:  # up
+                self.current.walls["t"] = False
+                nxt.walls["b"] = False
+
+            # move to next cell and mark visited
+            self.current = nxt
+            self.current.visited = True
+            return True
+
+        # No unvisited neighbors: backtrack if possible
+        if self.stack:
+            self.current = self.stack.pop()
+            return True
+
+        # Stack empty and no neighbors -> generation complete
+        return False
 
     def draw(self):
+        pg.Surface.fill(self.window, (250,250,250))
         for y in range(len(self.cells)):
             for x in range(len(self.cells[y])):
                 cell_obj = self.cells[x][y]

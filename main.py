@@ -22,16 +22,9 @@ run = True
 while run:
 
     #clock.tick(30)
-
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            run = False 
-        if event.type == pg.KEYDOWN:    
-            if event.key == pg.K_ESCAPE:
-                run = False
     
     pg.Surface.fill(window, (0,0,0))
-    loop.draw()  
+    run = loop.draw()  
     pg.display.flip()        
 
 pg.quit()
