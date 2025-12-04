@@ -27,19 +27,19 @@ class Loop():
     
     def draw(self):
         self.maze.draw()
-        px = self.player.x // self.player.cellSize
-        py = self.player.y // self.player.cellSize
-        maze_nei = self.maze.neighbors()
-        player_neighbors = []
-        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-            nx, ny = px + dx, py + dy
-            if 0 <= nx < self.maze.grid_size and 0 <= ny < self.maze.grid_size:
-                player_neighbors.append(self.maze.cells[nx][ny])
-        print(f"{self.player.x},{self.player.y}")
-        print(f"{px},{py}")
-        print(f"{[(n.x,n.y) for n in maze_nei]}")
-        print(f"{[(n.x,n.y) for n in player_neighbors]}")
-        if self.player.move(player_neighbors) == False:
+        # px = self.player.x // self.player.cellSize
+        # py = self.player.y // self.player.cellSize
+        # maze_nei = self.maze.neighbors()
+        # player_neighbors = []
+        # for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        #     nx, ny = px + dx, py + dy
+        #     if 0 <= nx < self.maze.grid_size and 0 <= ny < self.maze.grid_size:
+        #         player_neighbors.append(self.maze.cells[nx][ny])
+        # print(f"{self.player.x},{self.player.y}")
+        # print(f"{px},{py}")
+        # print(f"{[(n.x,n.y) for n in maze_nei]}")
+        # print(f"{[(n.x,n.y) for n in player_neighbors]}")
+        if self.player.move(self.cells) == False:
             return False
         self.player.drawPlayer(self.window)
         if self.player.checkGreen(self.cells):
