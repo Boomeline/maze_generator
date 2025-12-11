@@ -6,8 +6,8 @@ from time import sleep
 from player import Player
 from loop import Loop
 
-grid_size = 40
-cell_size = 15
+grid_size = 20
+cell_size = 30
 
 pg.init()
 
