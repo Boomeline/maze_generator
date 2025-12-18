@@ -13,7 +13,7 @@ class MazeGen():
         for x in range(grid_size):
             for y in range(grid_size):
                 self.cells[x][y] = Cell(None, x, y)
-        self.current = self.cells[0][0]
+        self.current = self.cells[randint(0, self.grid_size)][randint(0, self.grid_size)]
         stack.append(self.current)
         self.current.visited = True
         self.coordinates = []
@@ -38,15 +38,12 @@ class MazeGen():
   
 
     def gen(self):
-        # Perform a single DFS step: carve to a random unvisited neighbor
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
         self.neighbors()
         if self.validNeighbors:
             side = randint(0, len(self.validNeighbors) - 1)
             nxt = self.validNeighbors[side]
-            # push current to stack (path)
             self.stack.append(self.current)
-            # remove walls between current and nxt
             if self.current.x + 1 == nxt.x and self.current.y == nxt.y:  # right
                 self.current.walls["r"] = False
                 nxt.walls["l"] = False
@@ -60,17 +57,16 @@ class MazeGen():
                 self.current.walls["t"] = False
                 nxt.walls["b"] = False
 
-            # move to next cell and mark visited
             self.current = nxt
             self.current.visited = True
             return True
+        
+        self.animate()
 
-        # No unvisited neighbors: backtrack if possible
         if self.stack:
             self.current = self.stack.pop()
             return True
-
-        # Stack empty and no neighbors -> generation complete
+  
         return False
 
     def draw(self):
@@ -79,6 +75,9 @@ class MazeGen():
             for x in range(len(self.cells[y])):
                 cell_obj = self.cells[x][y]
 
+                if cell_obj.green:
+                    rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
+                    pg.draw.rect(self.window, (0,255,0), rect)
                 if cell_obj.walls["t"]:  # top
                     pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
                 if cell_obj.walls["b"]:  # bottom
@@ -89,24 +88,23 @@ class MazeGen():
                     pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
 
 
-    def animate(self, x = 0 , y = 0):
+    def animate(self):
+        x,y = self.current.x, self.current.y
         color = 250, 250, 250
-
         if randint(0, 800) == 1:
             color = (100, 250, 100)
             self.cells[x][y].green = True
+
         rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
         pg.draw.rect(self.window, color, rect)
 
-        cell_obj = self.cells[x][y]
-
-        if cell_obj.walls["t"]:  # top
+        if self.current.walls["t"]:  # top
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
-        if cell_obj.walls["b"]:  # bottom
+        if self.current.walls["b"]:  # bottom
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
-        if cell_obj.walls["l"]:  # left
+        if self.current.walls["l"]:  # left
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
-        if cell_obj.walls["r"]:  # right
+        if self.current.walls["r"]:  # right
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
         if y == self.grid_size  - 1:
             x += 1
@@ -114,3 +112,30 @@ class MazeGen():
         else: 
             y += 1
         return x, y
+
+
+    # def animate(self, x = 0 , y = 0):
+    #     color = 250, 250, 250
+
+    #     if randint(0, 800) == 1:
+    #         color = (100, 250, 100)
+    #         self.cells[x][y].green = True
+    #     rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
+    #     pg.draw.rect(self.window, color, rect)
+
+    #     cell_obj = self.cells[x][y]
+
+    #     if cell_obj.walls["t"]:  # top
+    #         pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size), 2)
+    #     if cell_obj.walls["b"]:  # bottom
+    #         pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size + self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+    #     if cell_obj.walls["l"]:  # left
+    #         pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
+    #     if cell_obj.walls["r"]:  # right
+    #         pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+    #     if y == self.grid_size  - 1:
+    #         x += 1
+    #         y = 0
+    #     else: 
+    #         y += 1
+    #     return x, y

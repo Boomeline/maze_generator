@@ -32,22 +32,22 @@ class Player ():
         for event in pg.event.get():
             if event.type == pg.KEYDOWN:
                 # print(event.key)
-                if event.key == pg.K_UP:
+                if event.key == pg.K_w or event.key == pg.K_UP:
                     moved = self.check_walls(dirs[0], cells)
                     print(moved)
                     if moved:
                         self.y -= self.cellSize
-                if event.key == pg.K_DOWN:
+                if event.key == pg.K_s or event.key == pg.K_DOWN:
                     moved = self.check_walls(dirs[1], cells)
                     print(moved)
                     if moved:
                         self.y += self.cellSize
-                if event.key == pg.K_LEFT:
+                if event.key == pg.K_a  or event.key == pg.K_LEFT:
                     moved = self.check_walls(dirs[2], cells)
                     print(moved)
                     if moved:
                         self.x -= self.cellSize
-                if event.key == pg.K_RIGHT:
+                if event.key == pg.K_d  or event.key == pg.K_RIGHT:
                     moved = self.check_walls(dirs[3], cells)
                     print(moved)
                     if moved:
@@ -82,8 +82,6 @@ class Player ():
         return False
 
     def checkGreen(self, cells: list):
-        indexX = self.x/self.gridSize
-        indexY = self.y/self.gridSize
-        if cells[int(indexX)][int(indexY)].green:
+        if cells[self.gx][self.gy].green:
             return True
         
