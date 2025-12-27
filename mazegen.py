@@ -4,15 +4,12 @@ import pygame as pg
 
 class MazeGen():
 
-    def __init__(self, stack: list, grid_size: int, cell_size: int, window ):
+    def __init__(self, stack: list, grid_size: int, cell_size: int, window, cells ):
         self.window = window
         self.grid_size = grid_size
         self.cell_size = cell_size
         self.stack = stack
-        self.cells = [[None for y in range(grid_size)] for x in range(grid_size)]
-        for x in range(grid_size):
-            for y in range(grid_size):
-                self.cells[x][y] = Cell(None, x, y)
+        self.cells = cells
         self.current = self.cells[randint(0, self.grid_size)][randint(0, self.grid_size)]
         stack.append(self.current)
         self.current.visited = True
@@ -38,6 +35,7 @@ class MazeGen():
   
 
     def gen(self):
+        
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
         self.neighbors()
         if self.validNeighbors:

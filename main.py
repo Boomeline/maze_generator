@@ -4,45 +4,54 @@ from cell import Cell
 from mazegen import MazeGen
 from time import sleep
 from player import Player
-from loop import Loop
 
 grid_size = 40
 cell_size = 15
 width = grid_size * cell_size + 2  
 height = grid_size * cell_size + 2
+cells = [[None for y in range(grid_size)] for x in range(grid_size)]
+for x in range(grid_size):
+    for y in range(grid_size):
+        cells[x][y] = Cell(None, x, y)
+
+
 
 pg.init()
 
-loop = Loop(grid_size, cell_size)
-player, window, maze = loop.call()
 stack = []
 window = pg.display.set_mode((width, height))
-cells = maze.get()
-
 player = Player(cell_size, grid_size)
-maze = MazeGen(stack, grid_size, cell_size, window)
+maze = MazeGen(stack, grid_size, cell_size, window, cells)
+ 
 
 clock = pg.time.Clock()
-    
-def gen(self):    
-    while True:
-        cont = maze.gen()
-        if not cont:
-            break
 
-def draw(self):
+def new():
+    global cells 
+    pg.Surface.fill(window, (0,0,0)) 
+    cells = gen()
+    return cells 
+
+    
+def gen(): 
+    global cells
+    cont = True   
+    while cont:
+        cont = maze.gen()
+        cells = maze.get()
+    return cells
+
+def draw():
+    global cells 
     maze.draw()
-    if player.move(cells) == False:
+    if not player.move(cells):
         return False
     player.drawPlayer(window)
     if player.checkGreen(cells):
-        sleep(1) 
-        for _ in range(width, height): 
-            maze.neighbors()
-            maze.gen()
-            cells = self.maze.get()
-    return True
+        cells = new()
+    return True, cells
 
+cells = gen() 
 run = True
  
 while run:
@@ -50,7 +59,7 @@ while run:
     #clock.tick(30)
     
     pg.Surface.fill(window, (0,0,0))
-    run = loop.draw()  
+    run, cells = draw()  
     pg.display.flip()        
 
 pg.quit()

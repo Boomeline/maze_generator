@@ -30,7 +30,11 @@ class Player ():
         neighbors = self.neigh_pl(cells)
         dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
         for event in pg.event.get():
-            if event.type == pg.KEYDOWN:
+            if event.type == pg.QUIT:
+                    return False 
+            if event.type == pg.KEYDOWN:    
+                if event.key == pg.K_ESCAPE:
+                    return False 
                 # print(event.key)
                 if event.key == pg.K_w or event.key == pg.K_UP:
                     moved = self.check_walls(dirs[0], cells)
@@ -52,11 +56,7 @@ class Player ():
                     print(moved)
                     if moved:
                         self.x += self.cellSize 
-                if event.type == pg.QUIT:
-                    return  False 
-                if event.type == pg.KEYDOWN:    
-                    if event.key == pg.K_ESCAPE:
-                        return  False 
+        return True
 
     def check_walls(self, side: tuple, cells):
         print(side)
