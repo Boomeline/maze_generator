@@ -56,7 +56,7 @@ class Player ():
                     print(moved)
                     if moved:
                         self.x += self.cellSize 
-        return True
+        return True 
 
     def check_walls(self, side: tuple, cells):
         print(side)

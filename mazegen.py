@@ -35,8 +35,6 @@ class MazeGen():
   
 
     def gen(self):
-        
-        dirs = [(0, -1), (0, 1), (-1, 0), (1, 0)]
         self.neighbors()
         if self.validNeighbors:
             side = randint(0, len(self.validNeighbors) - 1)
@@ -89,7 +87,7 @@ class MazeGen():
     def animate(self):
         x,y = self.current.x, self.current.y
         color = 250, 250, 250
-        if randint(0, 800) == 1:
+        if randint(0, self.grid_size * self.grid_size // 2) == 1:
             color = (100, 250, 100)
             self.cells[x][y].green = True
 

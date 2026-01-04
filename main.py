@@ -38,7 +38,7 @@ def gen():
     cont = True   
     while cont:
         cont = maze.gen()
-        cells = maze.get()
+    cells = maze.get()
     return cells
 
 def draw():
@@ -49,7 +49,7 @@ def draw():
     player.drawPlayer(window)
     if player.checkGreen(cells):
         cells = new()
-    return True, cells
+    return cells
 
 cells = gen() 
 run = True
@@ -59,7 +59,7 @@ while run:
     #clock.tick(30)
     
     pg.Surface.fill(window, (0,0,0))
-    run, cells = draw()  
+    cells = draw()  
     pg.display.flip()        
 
 pg.quit()
