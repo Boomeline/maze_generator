@@ -38,28 +38,28 @@ class Player ():
                 # print(event.key)
                 if event.key == pg.K_w or event.key == pg.K_UP:
                     moved = self.check_walls(dirs[0], cells)
-                    print(moved)
+                    # print(moved)
                     if moved:
                         self.y -= self.cellSize
                 if event.key == pg.K_s or event.key == pg.K_DOWN:
                     moved = self.check_walls(dirs[1], cells)
-                    print(moved)
+                    # print(moved)
                     if moved:
                         self.y += self.cellSize
                 if event.key == pg.K_a  or event.key == pg.K_LEFT:
                     moved = self.check_walls(dirs[2], cells)
-                    print(moved)
+                    # print(moved)
                     if moved:
                         self.x -= self.cellSize
                 if event.key == pg.K_d  or event.key == pg.K_RIGHT:
                     moved = self.check_walls(dirs[3], cells)
-                    print(moved)
+                    # print(moved)
                     if moved:
                         self.x += self.cellSize 
         return True 
 
     def check_walls(self, side: tuple, cells):
-        print(side)
+        # print(side)
         cx, cy = self.gx, self.gy
         # sanity check indices
         if not (0 <= cx < self.gridSize and 0 <= cy < self.gridSize):

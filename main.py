@@ -28,9 +28,15 @@ clock = pg.time.Clock()
 
 def new():
     global cells 
+    global maze 
+    cells = [[None for y in range(grid_size)] for x in range(grid_size)]
+    for x in range(grid_size):
+        for y in range(grid_size):
+            cells[x][y] = Cell(None, x, y)
+    maze = MazeGen(stack, grid_size, cell_size, window, cells)
     pg.Surface.fill(window, (0,0,0)) 
     cells = gen()
-    return cells 
+    return cells, maze 
 
     
 def gen(): 
@@ -43,13 +49,14 @@ def gen():
 
 def draw():
     global cells 
+    global maze
     maze.draw()
     if not player.move(cells):
-        return False
+        return cells, maze, False
     player.drawPlayer(window)
     if player.checkGreen(cells):
-        cells = new()
-    return cells
+        cells, maze = new()
+    return cells, maze, True
 
 cells = gen() 
 run = True
@@ -59,7 +66,7 @@ while run:
     #clock.tick(30)
     
     pg.Surface.fill(window, (0,0,0))
-    cells = draw()  
+    cells, maze, run = draw()  
     pg.display.flip()        
 
 pg.quit()

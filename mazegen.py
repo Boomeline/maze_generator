@@ -1,6 +1,7 @@
 from cell import Cell
 from random import randint
 import pygame as pg 
+from time import sleep
 
 class MazeGen():
 
@@ -10,7 +11,7 @@ class MazeGen():
         self.cell_size = cell_size
         self.stack = stack
         self.cells = cells
-        self.current = self.cells[randint(0, self.grid_size)][randint(0, self.grid_size)]
+        self.current = self.cells[randint(0, self.grid_size -1 )][randint(0, self.grid_size - 1)]
         stack.append(self.current)
         self.current.visited = True
         self.coordinates = []
@@ -85,6 +86,7 @@ class MazeGen():
 
 
     def animate(self):
+        # sleep(0.002)
         x,y = self.current.x, self.current.y
         color = 250, 250, 250
         if randint(0, self.grid_size * self.grid_size // 2) == 1:
@@ -102,6 +104,7 @@ class MazeGen():
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size, y * self.cell_size), (x * self.cell_size, y * self.cell_size + self.cell_size), 2)
         if self.current.walls["r"]:  # right
             pg.draw.line(self.window, (0, 0, 0), (x * self.cell_size + self.cell_size, y * self.cell_size), (x * self.cell_size + self.cell_size, y * self.cell_size + self.cell_size), 2)
+        pg.display.flip()
         if y == self.grid_size  - 1:
             x += 1
             y = 0
