@@ -13,6 +13,7 @@ class MazeGen():
         self.cells = cells
         self.current = self.cells[randint(0, self.grid_size -1 )][randint(0, self.grid_size - 1)]
         stack.append(self.current)
+        self.current.green = True
         self.current.visited = True
         self.coordinates = []
         self.validNeighbors = []
@@ -60,7 +61,10 @@ class MazeGen():
         
         self.animate()
 
+        rand = randint(0, self.grid_size // 100 )
         if self.stack:
+            if rand == 1:
+                self.current.green = True
             self.current = self.stack.pop()
             return True
   
@@ -86,12 +90,12 @@ class MazeGen():
 
 
     def animate(self):
-        # sleep(0.002)
+        sleep(0.002)
         x,y = self.current.x, self.current.y
         color = 250, 250, 250
-        if randint(0, self.grid_size * self.grid_size // 2) == 1:
+        if self.cells[x][y].green == True:
             color = (100, 250, 100)
-            self.cells[x][y].green = True
+            
 
         rect = pg.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
         pg.draw.rect(self.window, color, rect)

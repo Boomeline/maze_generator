@@ -5,8 +5,8 @@ from mazegen import MazeGen
 from time import sleep
 from player import Player
 
-grid_size = 40
-cell_size = 15
+grid_size = 20
+cell_size = 25
 width = grid_size * cell_size + 2  
 height = grid_size * cell_size + 2
 cells = [[None for y in range(grid_size)] for x in range(grid_size)]
@@ -62,9 +62,9 @@ cells = gen()
 run = True
  
 while run:
-
-    #clock.tick(30)
+    clock.tick()
     
+    # print(clock)
     pg.Surface.fill(window, (0,0,0))
     cells, maze, run = draw()  
     pg.display.flip()        
